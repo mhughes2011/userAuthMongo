@@ -8,9 +8,11 @@
     "start": "node ./app"
   },
   "dependencies": {
-    "body-parser": "^1.13.3",
     "express": "^4.13.4",
     "pug": "^2.0.0-beta2"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
 }

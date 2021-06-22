@@ -1,16 +1,15 @@
 var express = require('express');
-var bodyParser = require('body-parser');
 var app = express();
 
 // parse incoming requests
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.json());
 
 // serve static files from /public
 app.use(express.static(__dirname + '/public'));
 
 // view engine setup
 app.set('view engine', 'pug');
+//Tells the app where to find the pug views to display
 app.set('views', __dirname + '/views');
 
 // include routes
