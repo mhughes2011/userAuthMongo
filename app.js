@@ -1,5 +1,12 @@
 var express = require('express');
+var mongoose = require('mongoose');
 var app = express();
+
+//mongodb connection
+mongoose.connect('mongodb://localhost:27017/bookworm', {useNewUrlParser: true, useUnifiedTopology: true});
+var db = mongoose.connection;
+//mongo error handler.  this will handle any errors that happen when connecting to the database
+db.on('error', console.error.bind(console, 'connection error:'));
 
 // parse incoming requests
 app.use(express.json());
