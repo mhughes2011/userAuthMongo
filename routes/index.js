@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var User = require('../models/user');
 
 // GET /
 router.get('/', function(req, res, next) {
@@ -23,7 +24,43 @@ router.get('/register', (req, res, next) => {
 
 // POST /register
 router.post('/register', (req, res, next) => {
-  res.send('User Created!');
+  if(
+    req.body.email &&
+    req.body.name &&
+    req.body.favoriteBook &&
+    req.body.password &&
+    req.body.confirmPassword
+    ) {
+
+      //confirm that user typed same password twice
+      if(req.body.password !== req.body.confirmPassword) {
+        const err = new Error('Passwords must match.');
+        err.status = 400;
+        next(err);
+      } 
+
+      //create object with form input
+      const userData = {
+        email: req.body.email,
+        name: req.body.name,
+        favoriteBook: req.body.favoriteBook,
+        password: req.body.password
+      };
+
+      //use schema's 'create' method to insert document into Mongo
+      User.create(userData, (error, user) => {
+        if(error) {
+          next(error);
+        } else {
+          res.redirect('/profile');
+        }
+      });
+
+    } else {
+      const err = new Error('All fields required.');
+      err.status = 400;
+      next(err);
+    }
 })
 
 module.exports = router;
