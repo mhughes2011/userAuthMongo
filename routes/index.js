@@ -2,11 +2,34 @@ var express = require('express');
 var router = express.Router();
 var User = require('../models/user');
 
-//Get /login
+/**
+ * APP IS BROKEN!!!
+ * For some reason the mongo db isn't working because the data from the form isn't actually being received by the body.  Whenever you submit to register or login there is no information coming from the form.  This breaks the entire app.  I think it has something to do with the schema implementation from Mongoose but I have no idea.
+ */
+
+//GET /profile
+router.get('/profile', (req, res, next) => {
+  if(!req.session.userId) {
+    var err = new Error('You are not authorized to view this page.');
+    err.status = 403;
+    next(err);
+  }
+  User.findById(req.session.userId)
+    .exec((error, user) => {
+      if(error) {
+        next(error);
+      }else {
+        res.render('profile', {title: 'Profile', name: user.name, favorite: user.favoriteBook});
+      }
+    })
+})
+
+//GET /login
 router.get('/login', (req, res, next) => {
   res.render('login', {title: 'Log In'});
 })
 
+//POST /login
 router.post('/login', (req, res, next) =>{
   console.log(req.body);
   if(req.body.email && req.body.password) {
