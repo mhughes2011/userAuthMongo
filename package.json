@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
+    "connect-mongo": "^4.4.1",
     "express": "^4.13.4",
     "express-session": "^1.17.2",
     "mongodb": "^3.6.9",

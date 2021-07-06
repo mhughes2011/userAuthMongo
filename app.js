@@ -1,13 +1,24 @@
 var express = require('express');
 var mongoose = require('mongoose');
 var session = require('express-session');
+var MongoStore = require('connect-mongo')(session); //Needs to be placed after session import
 var app = express();
 
+//mongodb connection
+mongoose.connect('mongodb://localhost:27017/bookworm', {useNewUrlParser: true, useUnifiedTopology: true});
+var db = mongoose.connection;
+//mongo error handler.  this will handle any errors that happen when connecting to the database
+db.on('error', console.error.bind(console, 'connection error:'));
+
 //use sessions for tracking logins
+//Because of the MongoStore, these need to be moved to below the instantiation of the db on line 11.  This means the app stores session information in Mongo instead of in RAM
 app.use(session({
   secret: 'treehouse loves you', //only required parameter
   resave: true,
-  saveUninitialized: false
+  saveUninitialized: false,
+  store: new MongoStore({
+    mongooseConnection: db
+  })
 }))
 
 //make userID available in templates
@@ -15,12 +26,6 @@ app.use((req, res, next) => {
   res.locals.currentUser = req.session.userId;
   next();
 })
-
-//mongodb connection
-mongoose.connect('mongodb://localhost:27017/bookworm', {useNewUrlParser: true, useUnifiedTopology: true});
-var db = mongoose.connection;
-//mongo error handler.  this will handle any errors that happen when connecting to the database
-db.on('error', console.error.bind(console, 'connection error:'));
 
 // parse incoming requests
 app.use(express.json());
