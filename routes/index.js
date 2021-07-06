@@ -9,12 +9,10 @@ var mid = require('../middleware');
  */
 
 //GET /profile
-router.get('/profile', (req, res, next) => {
-  if(!req.session.userId) {
-    var err = new Error('You are not authorized to view this page.');
-    err.status = 403;
-    next(err);
-  }
+/**
+ * This route is now password protected simply by using the custom middleware!
+ */
+router.get('/profile', mid.requiresLogin, (req, res, next) => {
   User.findById(req.session.userId)
     .exec((error, user) => {
       if(error) {

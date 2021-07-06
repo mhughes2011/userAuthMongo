@@ -6,6 +6,13 @@ function loggedout(req, res, next) {
     return next();
 }
 
+/**
+ * This custom function is how you password protect any route in my application!
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ * @returns 
+ */
 function requiresLogin(req, res, next) {
     if(req.session && req.session.userId) {
         return next();
@@ -17,3 +24,4 @@ function requiresLogin(req, res, next) {
 }
 
 module.exports.loggedOut = loggedOut;
+module.exports.requiresLogin = requiresLogin;
