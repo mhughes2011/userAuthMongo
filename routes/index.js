@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var User = require('../models/user');
+var mid = require('../middleware');
 
 /**
  * APP IS BROKEN!!!
@@ -39,7 +40,10 @@ router.get('/logout', (req, res, next) => {
 })
 
 //GET /login
-router.get('/login', (req, res, next) => {
+/**
+ * This route has custom middleware!
+ */
+router.get('/login', mid.loggedOut, (req, res, next) => {
   res.render('login', {title: 'Log In'});
 })
 
@@ -80,7 +84,10 @@ router.get('/contact', function(req, res, next) {
 })
 
 // GET /register
-router.get('/register', (req, res, next) => {
+/**
+ * This route has custom middleware!
+ */
+router.get('/register', mid.loggedOut, (req, res, next) => {
   res.render('register', {title: 'Sign up'});
 })
 
